@@ -8,7 +8,7 @@ import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 import "./sing-up-form.styles.scss";
 
-const defalutformFields = {
+const defaultformFields = {
   displayName: "",
   email: "",
   password: "",
@@ -16,11 +16,11 @@ const defalutformFields = {
 };
 
 const SignUpForm = () => {
-  const [formFields, setFormFields] = useState(defalutformFields);
+  const [formFields, setFormFields] = useState(defaultformFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
   const resetFormFields = () => {
-    setFormFields(defalutformFields);
+    setFormFields(defaultformFields);
   };
 
   const handleChange = (event) => {
@@ -29,8 +29,9 @@ const SignUpForm = () => {
   };
 
   const handleSubmit = async (event) => {
+    console.log('oli')
     event.preventDefault();
-    if (confirmPassword != password) {
+    if (password !== confirmPassword) {
       console.log("c");
       return;
     }
@@ -41,6 +42,7 @@ const SignUpForm = () => {
       );
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
+      console.log(user);
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +84,6 @@ const SignUpForm = () => {
           name="confirmPassword"
           value={confirmPassword}
         />
-
         <Button type="submit">Sign up</Button>
       </form>
     </div>
