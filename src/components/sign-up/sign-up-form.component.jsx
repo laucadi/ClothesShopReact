@@ -1,11 +1,12 @@
 import { async } from "@firebase/util";
-import React, { useState } from "react";
+import React, { useState, useContext} from "react";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
 } from "../../utils/firebase.utils";
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
+import {UserContext} from '../../context/user.context'
 import "./sing-up-form.styles.scss";
 
 const defaultformFields = {
@@ -18,7 +19,7 @@ const defaultformFields = {
 const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultformFields);
   const { displayName, email, password, confirmPassword } = formFields;
-
+  const {setCurrentUser}  = useContext(UserContext)
   const resetFormFields = () => {
     setFormFields(defaultformFields);
   };
@@ -29,10 +30,9 @@ const SignUpForm = () => {
   };
 
   const handleSubmit = async (event) => {
-    console.log('oli')
     event.preventDefault();
     if (password !== confirmPassword) {
-      console.log("c");
+      alert('confirm your password')
       return;
     }
     try {
@@ -40,9 +40,9 @@ const SignUpForm = () => {
         email,
         password
       );
+      setCurrentUser(user)
       await createUserDocumentFromAuth(user, { displayName });
       resetFormFields();
-      console.log(user);
     } catch (error) {
       console.log(error);
     }

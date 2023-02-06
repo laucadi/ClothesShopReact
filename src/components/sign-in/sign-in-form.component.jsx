@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
@@ -8,6 +8,7 @@ import {
 import Button from "../button/button.component";
 import FormInput from "../form-input/form-input.component";
 import "./sing-in-form.styles.scss";
+import { UserContext } from "../../context/user.context";
 
 const defalutformFields = {
   email: "",
@@ -17,6 +18,7 @@ const defalutformFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defalutformFields);
   const { email, password } = formFields;
+  const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields(defalutformFields);
@@ -34,22 +36,22 @@ const SignInForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
+      const { user } = await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
-      console.log(response);
+      setCurrentUser(user);
       resetFormFields();
     } catch (error) {
       switch (error.code) {
-        case 'auth/wrong-password':
-        alert('incorrect password for email')
-        break;
-        case 'auth/user-not-found':
-        alert('user not found')
+        case "auth/wrong-password":
+          alert("incorrect password for email");
+          break;
+        case "auth/user-not-found":
+          alert("user not found");
         default:
-          console.log(error)
-      } 
+          console.log(error);
+      }
     }
   };
 
@@ -59,10 +61,9 @@ const SignInForm = () => {
       <span>Sign in with your email and password</span>
       <form>
         <FormInput
-        required
+          required
           label="Email"
           type="email"
-          required
           onChange={handleChange}
           name="email"
           value={email}
@@ -70,7 +71,6 @@ const SignInForm = () => {
         <FormInput
           required
           label="Password"
-          required
           onChange={handleChange}
           name="password"
           value={password}
