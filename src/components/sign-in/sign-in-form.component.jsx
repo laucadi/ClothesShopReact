@@ -18,14 +18,14 @@ const defalutformFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defalutformFields);
   const { email, password } = formFields;
+  //esta es una forma de actualizar el contexto
   const { setCurrentUser } = useContext(UserContext);
 
   const resetFormFields = () => {
     setFormFields(defalutformFields);
   };
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await signInWithGooglePopup();
   };
 
   const handleChange = (event) => {
@@ -40,7 +40,6 @@ const SignInForm = () => {
         email,
         password
       );
-      setCurrentUser(user);
       resetFormFields();
     } catch (error) {
       switch (error.code) {
